@@ -1,0 +1,41 @@
+
+import java.lang.Object;
+import java.math.BigInteger;
+import java.util.ArrayList;
+
+public class Main {
+
+    static BigInteger karatsuba(BigInteger longOne, BigInteger longTwo) {
+
+        if (longOne.bitLength() - (longTwo.bitLength()) >= 7) {              //if the numbers have different # of digits, can't handle it.
+            System.out.println("I'm not that good!");
+            BigInteger failure = new BigInteger("0");
+            return failure;
+        } else {
+
+            if (longOne.bitLength() <= 7) return longOne.multiply(longTwo);                   //base case of recursion: simple multiplication
+
+            int halfDig = longOne.bitLength() / 2 + longOne.bitLength() % 2;
+
+            BigInteger b = longOne.shiftRight(halfDig);
+            BigInteger a = longOne.subtract(b.shiftLeft(halfDig));
+            BigInteger d = longTwo.shiftRight(halfDig);
+            BigInteger c = longTwo.subtract(d.shiftLeft(halfDig));
+
+            BigInteger ac = karatsuba(a, c);
+            BigInteger bd = karatsuba(b, d);
+            BigInteger abcdTerm = (karatsuba(a.add(b), c.add(d)).subtract(ac).subtract(bd)).shiftLeft(halfDig);
+
+            return ac.add(abcdTerm.add(bd.shiftLeft(2*halfDig)));
+
+
+        }
+        }
+
+
+        public static void main (String[]args){
+        BigInteger bigIntOne = new BigInteger("3141592653589793238462643383279502884197169399375105820974944592");
+        BigInteger bigIntTwo = new BigInteger("2718281828459045235360287471352662497757247093699959574966967627");
+            System.out.println(karatsuba(bigIntOne, bigIntTwo));
+        }
+    }
